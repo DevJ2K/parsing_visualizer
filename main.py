@@ -1,6 +1,8 @@
 from Colors import *
 import os
+import sys
 from mylib import *
+from utils import *
 import subprocess
 
 def allow_to_expand(is_quote_open: bool, quote_type: bool) -> bool:
@@ -54,7 +56,7 @@ def skip_whitespace(string: str, is_quote_open: bool) -> int:
 	else:
 		return 1
 
-def handle_input_parsing(initial_str: str, display_step: bool = False) -> str:
+def handle_input_parsing(initial_str: str, step: bool = False) -> str:
 	"""Cette fonction a pour but de traiter l'input principal :
 	- Retirer les guillemets
 	- Expand les variables d'environnements
@@ -76,7 +78,7 @@ def handle_input_parsing(initial_str: str, display_step: bool = False) -> str:
 	i: int = 0
 
 	while i < len(string):
-
+		display_step(string, i, return_str, is_quote_open, quote_type, REDB, step)
 
 		if string[i] == '"' or string[i] == '\'':
 			# Si la guillemet ouvert est celle actuel, on la ferme
@@ -96,11 +98,14 @@ def handle_input_parsing(initial_str: str, display_step: bool = False) -> str:
 			expand_var: str | None = get_expand_value(string[i + 1:])
 			# On incremente i jusqu'à la fin de la variable
 			i += get_str_to_expand_size(string[i + 1:])
-
 			if expand_var is None:
+				display_step(string, i, return_str, is_quote_open, quote_type, REDB, step)
+
 				# Si la variable n'existe pas, il faut retirer tous les espaces jusqu'à la prochaine valeur
 				while i + 1 < len(string) and my_isspace(string[i + 1]) and is_quote_open == False:
 					i += 1
+					display_step(string, i, return_str, is_quote_open, quote_type, REDB, step)
+
 				# Si jamais la prochaine valeur c'est la fin du mot, il faut retirer tous les espaces à droite
 				# car c'est possible qu'il y en avait avant.
 				if i + 1 == len(string):
@@ -111,7 +116,26 @@ def handle_input_parsing(initial_str: str, display_step: bool = False) -> str:
 			return_str += string[i]
 		i += skip_whitespace(string[i:], is_quote_open)
 
+	display_step(string, i, return_str, is_quote_open, quote_type, REDB, step)
 	return return_str
-	pass
+
+if __name__ == "__main__":
+
+	if len(sys.argv) == 2 and sys.argv[1] in ['-p', '--prompt']:
+		# HELLO'$USER'_"'az'"_"'$USER'"_'$AC'_"$UNEXIST_." $   $ $A   $USER$USER $.E $B        '$    .E' "$   .B"
+		# "SALUT$USER$USER'$USER'$B$E"
+		initial_str = input("Enter string to visualize -> ")
+	else:
+		initial_str = "HELLO'$USER'_\"'az'\"_\"'$USER'\"_'$AC'_\"$UNEXIST_.\" $   $ $A   $USER$USER $.E $B        '$    .E' \"$   .B\""
+
+
+	return_str = handle_input_parsing(initial_str=initial_str, step=True)
+	return_bash = subprocess.run(f"echo -n {initial_str}" ,shell=True, capture_output=True, executable="/bin/bash") #
+
+	bash_str = return_bash.stdout.decode('utf-8')
+
+	print(f"{BHWHITE}INITIAL STR : {BHWHITE}{initial_str}{RESET}")
+	print(f"{BHWHITE}FINAL STR   : {GREENB}{return_str}{RESET}")
+	print(f"{BHWHITE}REAL BASH   : {CYANB}{bash_str}{RESET}")
 
 
