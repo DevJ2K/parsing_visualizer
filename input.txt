@@ -3,3 +3,14 @@ $USER$USER
 $USER    $USER
 "     "$USER   "    $USER" "           "
      "SALUT"
+"<   infile" "< inf'ile'"
+inf'ile'
+SALUT $B
+SALUT$B
+SALUT $B     
+SALUT $B.
+SALUT $B E
+SALUT $B              E
+SALUT $B            '  E'
+SALUT "$B   "
+SALUT    '$B  '

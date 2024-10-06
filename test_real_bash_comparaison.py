@@ -1,7 +1,7 @@
 # import pytest
 import subprocess
 from draft import main
-
+from main import handle_input_parsing
 
 # $USER$USER
 # $USER    $USER
@@ -25,4 +25,4 @@ def test_all_inputs():
 		print(f"Current input test : {input_to_test}")
 		print(f"EXCEPT : {bash_value}")
 		print("=" * 25)
-		assert main(initial_str=input_to_test) == bash_value
+		assert handle_input_parsing(initial_str=input_to_test) == bash_value

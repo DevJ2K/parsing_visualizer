@@ -72,6 +72,7 @@ def get_str_to_expand_size(string: str) -> int:
 	return i
 
 def allow_to_expand(is_quote_open: bool, quote_type: bool) -> bool:
+	return (is_quote_open == True and quote_type == '\'') == False
 	if is_quote_open:
 		if quote_type == '"':
 			return True
@@ -119,7 +120,7 @@ def main(initial_str: str):
 		# display_str(string, i, return_str)
 		# input("(enter)...")
 		# print(f"--{i}")
-		if string[i] == '"':
+		if string[i] == '"' or string[i] == '\'':
 			if is_quote_open == True and quote_type == string[i]:
 				is_quote_open = False
 			elif is_quote_open == False:
@@ -129,14 +130,14 @@ def main(initial_str: str):
 				return_str += string[i]
 
 
-		elif string[i] == '\'':
-			if is_quote_open == True and quote_type == string[i]:
-				is_quote_open = False
-			elif is_quote_open == False:
-				is_quote_open = True
-				quote_type = string[i]
-			else:
-				return_str += string[i]
+		# elif string[i] == '\'':
+		# 	if is_quote_open == True and quote_type == string[i]:
+		# 		is_quote_open = False
+		# 	elif is_quote_open == False:
+		# 		is_quote_open = True
+		# 		quote_type = string[i]
+		# 	else:
+		# 		return_str += string[i]
 
 		elif string[i] == "$" and allow_to_expand(is_quote_open, quote_type):
 			expand_var = look_for_expand(string[i + 1:])
@@ -146,8 +147,11 @@ def main(initial_str: str):
 			if expand_var is None:
 				return_str += ""
 				# print("NEED TO SKIP SPACE")
-				while i + 1 < len(string) and string[i + 1] in [" ", "	"]:
+				while i + 1 < len(string) and string[i + 1] in [" ", "	"] and is_quote_open == False:
 					i += 1
+				# return_str = ft_strtrim_whitespace(return_str)
+				if i + 1 == len(string):
+					return_str = return_str.rstrip()
 			else:
 				return_str += expand_var
 
@@ -156,7 +160,6 @@ def main(initial_str: str):
 		i += skip_whitespace(string[i:], is_quote_open)
 
 		# display_quotes_informations(is_quote_open, quote_type)
-
 	return_value = subprocess.run(f"echo -n {initial_str}" ,shell=True, capture_output=True, executable="/bin/bash") #
 
 	bash_str = return_value.stdout.decode('utf-8')
