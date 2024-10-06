@@ -64,7 +64,7 @@ def main(string: str):
 
 	i = 0
 	while i < len(string):
-		print(f"--{i}")
+		# print(f"--{i}")
 		if string[i] == '"':
 			if is_quote_open == True and quote_type == string[i]:
 				is_quote_open = False
@@ -86,8 +86,8 @@ def main(string: str):
 				return_str += string[i]
 		elif string[i] == "$" and allow_to_expand(is_quote_open, quote_type):
 			return_str += look_for_expand(string[i:])
-			print(i)
-			print(len(look_for_expand(string[i:])))
+			# print(i)
+			# print(len(look_for_expand(string[i:])))
 			i += len(look_for_expand(string[i:])) - 1
 			print(i)
 		else:
@@ -112,4 +112,6 @@ def main(string: str):
 
 if __name__ == "__main__":
 	initial_str = "HELLO'$USER'_\"'az'\"_\"'$USER'\"_'$AC'_\"$UNEXIST_\""
+
+	initial_str = input("Enter string to visualize -> ")
 	main(string=initial_str)
