@@ -112,6 +112,7 @@ def handle_input_parsing(initial_str: str, step: bool = False) -> str:
 					return_str = return_str.rstrip()
 			else:
 				return_str += expand_var
+				display_step(string, i, return_str, is_quote_open, quote_type, REDB, step)
 		else:
 			return_str += string[i]
 		i += skip_whitespace(string[i:], is_quote_open)
