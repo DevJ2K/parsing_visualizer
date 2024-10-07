@@ -22,7 +22,7 @@ def display_quotes_informations(is_open: bool, quote_type: str):
 	print(f"{BHWHITE}Expand is allow ? : {GREENHB + 'YES' if allow_to_expand(is_open, quote_type) else REDHB + 'NO'}{RESET}")
 
 def display_str(string: str, index: int, return_str: str):
-	print(f"{BHGREEN}RETURN  : {WHITEB}{return_str}{RESET}")
+	print(f"{BHGREEN}RETURN  :{RESET}{BBLACK} {WHITEB}{return_str}{RESET}")
 	print(f"{BHBLUE}CURRENT :{BHWHITE} ", end="")
 	highlight_str_i(string, index, REDB)
 	print(RESET)
